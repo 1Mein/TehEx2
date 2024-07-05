@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\LoginRegisterController;
+use App\Http\Controllers\Api\Posts\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,5 +23,12 @@ use Illuminate\Support\Facades\Route;
 Route::controller(LoginRegisterController::class)->group(function() {
     Route::post('/register', 'register')->name('register');
     Route::post('/login', 'login')->name('login');
+    Route::post('/logout', 'logout')->name('logout')->middleware('auth:sanctum');
 });
-Route::post('/logout', [LoginRegisterController::class, 'logout'])->middleware('auth:sanctum');
+
+
+
+Route::apiResource('posts', PostController::class)
+    ->except('show')
+    ->withTrashed()
+    ->middleware('auth:sanctum');
